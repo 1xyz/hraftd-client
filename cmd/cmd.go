@@ -6,6 +6,7 @@ import (
 	"github.com/1xyz/hraftd-client/config"
 	"github.com/spf13/cobra"
 	"log"
+	"time"
 )
 
 const version = "1.0.0"
@@ -34,9 +35,10 @@ func NewCmdRoot(cfg *config.Config) *cobra.Command {
 			return nil
 		},
 	}
+
 	var getCmd = &cobra.Command{
 		Use:   "get",
-		Short: "Get` the specified key and value",
+		Short: "Get the specified key and value",
 		Args:  MinimumArgs(1, ""),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if serverURL == "" {
@@ -52,10 +54,31 @@ func NewCmdRoot(cfg *config.Config) *cobra.Command {
 			return nil
 		},
 	}
+
+	var loadCmd = &cobra.Command{
+		Use:   "load",
+		Short: "Run a simple load test",
+		Args:  MinimumArgs(1, ""),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if serverURL == "" {
+				serverURL = cfg.URL
+			}
+
+			duration, err := time.ParseDuration(args[0])
+			if err != nil {
+				return err
+			}
+
+			cli := client.NewHttpClient(serverURL, cfg.Timeout)
+			return client.RunLoadTest(cli, duration)
+		},
+	}
+
 	rootCmd.PersistentFlags().StringVarP(&serverURL, "serverURL", "s",
 		"http://localhost:11001", "Server URL of the master")
 	rootCmd.AddCommand(putCmd)
 	rootCmd.AddCommand(getCmd)
+	rootCmd.AddCommand(loadCmd)
 	return rootCmd
 }
 

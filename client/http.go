@@ -27,15 +27,13 @@ func NewHttpClient(url string, timeout time.Duration) *HttpClient {
 
 func (h *HttpClient) Put(key, value string) error {
 	body := fmt.Sprintf(`{"%s":"%s"}`, key, value)
-	fmt.Printf("Posting body %s to url %s\n", body, h.keyURL)
 	resp, err := h.client.Post(h.keyURL, "application/json", strings.NewReader(body))
 	if err != nil {
 		return err
 	}
 
 	defer resp.Body.Close()
-	respBody, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
+	if _, err := ioutil.ReadAll(resp.Body); err != nil {
 		return err
 	}
 
@@ -43,7 +41,6 @@ func (h *HttpClient) Put(key, value string) error {
 		return fmt.Errorf("error %v from server", resp.StatusCode)
 	}
 
-	fmt.Printf("response %s", string(respBody))
 	return nil
 }
 
