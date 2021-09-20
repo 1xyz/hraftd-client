@@ -29,7 +29,7 @@ func NewCmdRoot(cfg *config.Config) *cobra.Command {
 			}
 			cli := client.NewHttpClient(serverURL, cfg.Timeout)
 			if err := cli.Put(args[0], args[1]); err != nil {
-				log.Printf("Put key = %v error = %w", args[0], err)
+				log.Printf("Put key = %v error = %v\n", args[0], err)
 				return err
 			}
 			return nil
@@ -47,7 +47,7 @@ func NewCmdRoot(cfg *config.Config) *cobra.Command {
 			cli := client.NewHttpClient(serverURL, cfg.Timeout)
 			value, err := cli.Get(args[0])
 			if err != nil {
-				log.Printf("Put key = %v error = %w", args[0], err)
+				log.Printf("Put key = %v error = %v\n", args[0], err)
 				return err
 			}
 			log.Printf("value = %v\n", value)
