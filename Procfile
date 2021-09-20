@@ -1,0 +1,1 @@
+client:  ./bin/hraftc -s http://localhost:11000  load 20s
