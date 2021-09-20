@@ -1,6 +1,7 @@
 package client
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -44,7 +45,7 @@ func (h *HttpClient) Put(key, value string) error {
 	return nil
 }
 
-func (h *HttpClient) Get(key string) (string, error)  {
+func (h *HttpClient) Get(key string) (string, error) {
 	keyUrl := fmt.Sprintf("%s/%s", h.keyURL, key)
 
 	resp, err := h.client.Get(keyUrl)
@@ -57,4 +58,34 @@ func (h *HttpClient) Get(key string) (string, error)  {
 		return "", err
 	}
 	return string(b), nil
+}
+
+type ServerInfo struct {
+	// Indicates the Raft address of the leader
+	Leader string `json:"leader"`
+
+	// Indicates the current state of queried server
+	State string `json:"state"`
+}
+
+func (h *HttpClient) GetInfo() (*ServerInfo, error) {
+	url := fmt.Sprintf("%s/info", h.url)
+	resp, err := h.client.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var si ServerInfo
+	err = json.Unmarshal(b, &si)
+	if err != nil {
+		return nil, err
+	}
+
+	return &si, nil
 }

@@ -9,4 +9,5 @@ metadata:
   name: hraftc-config
   namespace: hraft
 data:
-  NODE_ADDR: "node0"
+  NODE_ADDR: ""
+
