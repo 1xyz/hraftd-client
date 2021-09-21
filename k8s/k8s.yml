@@ -1,13 +1,20 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: hraft
+  name: hraftc
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hraftc
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: hraftc-config
-  namespace: hraft
+  namespace: hraftc
 data:
-  NODE_ADDR: ""
+  NODE_ADDR: "hraftd-0.hraftd.hraft.svc.cluster.local:11000"
+
+
 

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hraftc
+  namespace: hraftc
+  labels:
+    app: hraftc
+spec:
+  containers:
+    - name: hraftc
+      image: 1xyz/hraftc
+      imagePullPolicy: Never
+      env:
+      - name: NODE_ADDR
+        valueFrom:
+          configMapKeyRef:
+            name: hraftc-config
+            key: NODE_ADDR
+      command: ["sleep", "1000"]

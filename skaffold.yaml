@@ -1,0 +1,14 @@
+apiVersion: skaffold/v2beta23
+kind: Config
+metadata:
+  name: hraftd-client
+build:
+  tagPolicy:
+    gitCommit: {}
+  artifacts:
+  - image: 1xyz/hraftc
+deploy:
+  kubectl:
+    manifests:
+    - k8s/k8s.yml
+    - k8s/pod.yml
